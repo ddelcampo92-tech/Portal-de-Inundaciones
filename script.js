@@ -206,10 +206,10 @@ function actualizarVisibilidadMunicipios() {
   if (currentZoom >= ZOOM_MUNICIPIOS_VISIBLE || selectedMunicipio) {
     // Mostrar la capa con estilo visible
     municipiosVisibleLayer.setStyle({
-      color: '#8a2035',
+      color: '#00BFFF',
       weight: 1.5,
       opacity: 0.8,
-      fillColor: '#8a2035',
+      fillColor: '#00BFFF',
       fillOpacity: 0.05
     });
   } else {
@@ -1656,7 +1656,7 @@ async function conectar() {
           } else if (tbl.includes('lineas')) {
             color = '#FF6B6B'; // Rojo para líneas de conducción
           } else if (tbl.includes('municipios')) {
-            color = '#8a2035'; // Vino para municipios
+            color = '#00BFFF'; // Azul brillante para municipios
           } else if (tbl.includes('regiones')) {
             color = '#9C27B0'; // Morado para regiones
           } else if (tbl === 'caem-dgig-fise-052-25-cp') {
@@ -2138,7 +2138,7 @@ async function cargarCapa(nombre) {
     if (nombre === 'municipios' || nombre === 'municipios_geojson') {
       const geoJsonLayer = L.geoJSON(null, {
         style: () => ({
-          color: '#8a2035',
+          color: '#00BFFF',
           weight: 2,
           opacity: 1,
           fillOpacity: 0,
@@ -2146,10 +2146,26 @@ async function cargarCapa(nombre) {
         }),
         onEachFeature: (feature, layer) => {
           const props = feature.properties;
+          
+          // Obtener el nombre del municipio
+          const nomgeo = props.nomgeo || props.NOMGEO || 
+                         props.nombre || props.NOMBRE ||
+                         props.nom_mun || props.NOM_MUN ||
+                         props.municipio || props.MUNICIPIO ||
+                         props.municipi_1 || props.MUNICIPI_1 || 'Sin nombre';
+          
+          // Agregar tooltip que aparece al pasar el mouse
+          layer.bindTooltip(nomgeo, {
+            permanent: false,
+            direction: 'center',
+            className: 'municipio-tooltip'
+          });
+          
+          // Agregar popup que aparece al hacer clic
           let popup = '<b>' + nombre + '</b><br>';
-          popup += `<b>Municipio:</b> ${props.municipi_1}<br>`;
+          popup += `<b>Municipio:</b> ${nomgeo}<br>`;
           Object.keys(props).forEach(key => {
-            if (key !== 'geom' && key !== 'municipi_1') {
+            if (key !== 'geom' && key !== 'municipi_1' && key !== 'nomgeo' && key !== 'NOMGEO') {
               popup += `${key}: ${props[key]}<br>`;
             }
           });
@@ -2195,7 +2211,7 @@ async function cargarCapa(nombre) {
     else if (nombre === 'atlas temporada 2024' || nombre === 'atlas temporada 2023' || 
              nombre === 'atlas temporada 2022' || nombre === 'atlas temporada 2021' || 
              nombre === 'atlas temporada 2020') {
-      console.log(`📊 Cargando capa de inundaciones: ${nombre}`);
+      console.log(` Cargando capa de inundaciones: ${nombre}`);
       const names = [...new Set(data.map(d => d.name))];
       const colorMap = {};
       names.forEach((n, idx) => {
@@ -6961,10 +6977,10 @@ function crearCapaVisibleMunicipios(data) {
           
           if (municipiosVisibleLayer && selectedMunicipio !== nomgeo) {
             layer.setStyle({
-              color: '#8a2035',
+              color: '#00BFFF',
               weight: 3,
               opacity: 1,
-              fillColor: '#8a2035',
+              fillColor: '#00BFFF',
               fillOpacity: 0.15
             });
           }
@@ -6979,15 +6995,15 @@ function crearCapaVisibleMunicipios(data) {
             const currentZoom = map.getZoom();
             if (currentZoom >= ZOOM_MUNICIPIOS_VISIBLE || selectedMunicipio) {
               layer.setStyle({
-                color: '#8a2035',
+                color: '#00BFFF',
                 weight: 1.5,
                 opacity: 0.8,
-                fillColor: '#8a2035',
+                fillColor: '#00BFFF',
                 fillOpacity: 0.05
               });
             } else {
               layer.setStyle({
-                color: '#8a2035',
+                color: '#00BFFF',
                 weight: 0,
                 opacity: 0,
                 fillOpacity: 0
@@ -7428,10 +7444,10 @@ function mostrarCapaMunicipios() {
   // Si existe la capa visible, mostrarla con estilo
   if (municipiosVisibleLayer) {
     municipiosVisibleLayer.setStyle({
-      color: '#8a2035',
+      color: '#00BFFF',
       weight: 1.5,
       opacity: 0.8,
-      fillColor: '#8a2035',
+      fillColor: '#00BFFF',
       fillOpacity: 0.05
     });
     console.log('✅ Capa de municipios activada');
@@ -7877,10 +7893,10 @@ function highlightMunicipio(municipioFeature) {
   if (municipiosVisibleLayer) {
     municipiosVisibleLayer.eachLayer(function(layer) {
       layer.setStyle({
-        color: '#8a2035',
+        color: '#00BFFF',
         weight: 1.5,
         opacity: 0.8,
-        fillColor: '#8a2035',
+        fillColor: '#00BFFF',
         fillOpacity: 0.05,
         dashArray: null
       });
